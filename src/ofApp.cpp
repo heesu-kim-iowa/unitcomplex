@@ -2,33 +2,29 @@
 
 /// Fnc for exp
 complex<double> exp_complex(complex<double> v) {
-	assert(v.real() == 0);		// constraint of TM (tangent manifold)
+	assert(v.real() == 0);
 	double theta = v.imag();
-	return complex<double>(cos(theta), sin(theta));	// Euler's formula
+	return complex<double>(cos(theta), sin(theta));	
 }
 
 complex<double> log_complex(complex<double> z) {
-	//assert(z.real()*z.real() + z.imag()*z.imag() == 1);		// contrain for unit circle(?)
-	double mag = sqrt(z.real()*z.real() + z.imag()*z.imag());	// ??
+	double mag = sqrt(z.real()*z.real() + z.imag()*z.imag());
 	assert(mag > 0);
-	double theta = asin(z.imag());		// from sin(theta) in cos(theta)+i*sin(theta)
+	double theta = asin(z.imag());		
 	return complex<double>(0, theta);
 }
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//z = complex<double>(500, 200);
-	//t = 0;
-	
-	p0 = complex<double>(0, 0);
-	p1 = complex<double>(1, 0);
-	p2 = complex<double>(1, 1);
-	p3 = complex<double>(0, 1);
+	t = 0;
 
-	r1 = complex<double>(cos(PI / 12), sin(PI / 12));
-	r2 = complex<double>(cos(6 * PI / 2), sin(6 * PI / 2));
-	//r1 = complex<double>(cos(0), sin(0));
-	//r2 = complex<double>(cos(PI), sin(PI));
+	p0 = complex<double>(-0.5, -0.5);
+	p1 = complex<double>(0.5, -0.5);
+	p2 = complex<double>(0.5, 0.5);
+	p3 = complex<double>(-0.5, 0.5);
+
+	r1 = complex<double>(cos(PI/8), sin(PI/8));
+	r2 = complex<double>(cos(PI/3), sin(PI/3));		// WHEN (theta_2 > PI), SOMEHING IS GOING WRONG SO THAT ROTATION TO r2 SHOWS WRONG RESULT. (AND IT ROTATES IN THE DIRECTION THAT HAS THE SMALLEST CHAGNE OF DEGREE)
 	t1 = complex<double>(2, 1);
 	t2 = complex<double>(-1.5, -1);
 
@@ -37,48 +33,18 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	//t += 0.01;
-	//double s = sin(t)*0.5 + 0.5;
-	//r = (1 - s)*r1 + s * r2;
 
 	s = ofGetMouseX();
 	s /= ofGetWidth();
 
 	t = (1 - s)*t1 + s * t2;
-	std::cout << "t: " << t << std::endl;
-	//r = (1 - s)*r2 + s * r1;
-	//r = exp_complex(complex<double>(0, s));
-	inv_r1 = complex<double>(r1.real() / (r1.real()*r1.real() + r1.imag()*r1.imag()), -r1.imag() / (r1.real()*r1.real() + r1.imag()*r1.imag()));
-	v = log_complex(inv_r1*r2);
+	inv_r1 = complex<double>(r1.real(), -r1.imag());
+	v = log_complex(inv_r1*r2);		
 	r = r1*exp_complex(s*v);
-
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	/// Playing with lines
-	//ofSetBackgroundColor(0, 0, 0);
-
-	//ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
-	//ofScale(1, -1);		// flip y coord
-
-	//ofSetColor(255, 255, 255);
-	//ofSetLineWidth(5);
-	//ofDrawLine(0, 0, z.real(), z.imag());
-	//
-	//complex<double> z1 = r1 * z;
-	//complex<double> z2 = r2 * z;
-	//ofSetColor(255, 0, 0);
-	//ofDrawLine(0, 0, z1.real(), z1.imag());
-	//ofSetColor(0, 0, 255);
-	//ofDrawLine(0, 0, z2.real(), z2.imag());
-
-	//complex<double> zprime = r * z;
-	//ofSetColor(0, 255, 0);
-	//ofDrawLine(0, 0, zprime.real(), zprime.imag());
-
-
-	/// Playing with square
 	ofSetBackgroundColor(0);
 
 	// translation must be eariler than scale
